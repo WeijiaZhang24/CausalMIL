@@ -75,86 +75,10 @@ class auxiliary_y_fixed(nn.Module):
 
         return M, max_instances, max_z_ins, loc_ins
 
-class tmil(nn.Module):
+
+class cmil_mnist(nn.Module):
     def __init__(self, args):
-        super(tmil, self).__init__()
-        self.cuda = args.cuda
-        self.instance_latent_dim = args.instance_dim
-        self.num_classes = args.num_classes
-        self.warmup = args.warmup
-  
-        self.reconstruction_coef = args.reconstruction_coef
-        self.kl_divergence_coef = args.kl_divergence_coef
-        self.aux_loss_multiplier_y = args.aux_loss_multiplier_y
-        self.decoder_x= decoder_x(latent_dim=self.instance_latent_dim)
-        self.encoder_x = encoder_x(latent_dim=self.instance_latent_dim)
-
-        self.auxiliary_y_fixed = auxiliary_y_fixed(self.instance_latent_dim, self.num_classes)
-    def forward(self, bag, bag_idx, bag_label):
-        # Encode
-        # encode instance latents
-        instance_mu, instance_logvar = self.encoder_x(bag)
-        instance_std = instance_logvar.mul(0.5).exp_()
-        qzx = dist.Normal(instance_mu, instance_std)
-        zx_q = qzx.rsample()  # [# of instances, instance_latent_dim]
-        
-        list_g = get_bag_labels(bag_idx)
-
-        # kl-divergence error for bag latent space should be KL( q(z_y|x) || p(z_y|y) )
-        #reorder by the same order as bag_latent_embeddings
-        reordered_y = reorder_y(bag_label, bag_idx, list_g).to(torch.device('cuda'))
-
-        # kl-divergence error for instance latent space
-        KL_zx =  0.5 * (instance_mu.pow(2) + instance_std.pow(2) - 2*torch.log(instance_std) - 1).mean()
-        
-        x_target = bag.flatten(start_dim = 1).contiguous()
-        y_hat, x_max, ins_hat, _ = self.auxiliary_y_fixed(zx_q, bag_idx, x_target)
-        loss = nn.BCEWithLogitsLoss(reduction = 'mean')
-        auxiliary_loss_y= loss(y_hat.squeeze(), reordered_y)
-        
-        # only calculates the recon_loss for the maximum one per bag
-        x_recon = self.decoder_x(ins_hat).flatten(start_dim = 1)
-        loss = nn.MSELoss(reduction = 'mean') 
-        reconstruction_loss = loss(x_recon,x_max)        
-        
-        return reconstruction_loss, KL_zx, auxiliary_loss_y
-
-    def loss_function(self, bag, bag_idx, bag_label, epoch):
-        # supervised
-        if self.warmup > 0:
-            kl_divergence_coef = min([self.kl_divergence_coef, (epoch * 1.) / self.warmup])
-        else:
-            kl_divergence_coef = self.kl_divergence_coef
-        reconstruction_loss, KL_zx, auxiliary_y \
-            = self.forward(bag, bag_idx, bag_label)
-        
-        elbo = (  reconstruction_loss + kl_divergence_coef * KL_zx + self.aux_loss_multiplier_y * auxiliary_y )
-        return elbo, auxiliary_y, reconstruction_loss, KL_zx
-        
-    def get_encoding(self, bag, bag_idx, threshold=0.5, L=10):
-        with torch.no_grad():
-            ins_loc, ins_scale = self.encoder_x.forward(bag)
-            
-        return ins_loc
-    
-    def classifier_ins(self, bag, bag_idx):
-        with torch.no_grad():
-            ins_loc, _ = self.encoder_x.forward(bag)            
-            # zy_q_loc, zy_q_scale = self.encoder_y.forward(bag)
-            
-            x_target = bag.flatten(start_dim = 1)
-            _, _, _, pred_ins = self.auxiliary_y_fixed(ins_loc, bag_idx, x_target)
-        return pred_ins
-
-    def reconstruct(self, ins_code):
-        with torch.no_grad():
-            img =self.decoder_x(ins_code)
-        return img
-
-
-class tmil_mnist(nn.Module):
-    def __init__(self, args):
-        super(tmil_mnist, self).__init__()
+        super(cmil_mnist, self).__init__()
         self.cuda = args.cuda
         self.instance_latent_dim = args.instance_dim
         self.num_classes = args.num_classes
