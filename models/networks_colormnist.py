@@ -122,9 +122,9 @@ class auxiliary_y_fixed(nn.Module):
         return M, max_instances, max_z_ins, loc_ins
 
 
-class tmil_mnist(nn.Module):
+class cmil_mnist(nn.Module):
     def __init__(self, args):
-        super(tmil_mnist, self).__init__()
+        super(cmil_mnist, self).__init__()
         self.cuda = args.cuda
         self.instance_latent_dim = args.instance_dim
         self.num_classes = args.num_classes
