@@ -27,7 +27,7 @@ def color_grayscale_arr(arr, red=True):
 # MIL version, each digit/item is colored, but the label is its original label
 # Binarization is performed in the MIL bag construction step.
 class ColoredMNIST(datasets.VisionDataset):
-  def __init__(self, root='/home/weijia/datasets/', env='train1', transform=None, target_transform=None, target_num = None):
+  def __init__(self, root='/home/user/datasets/', env='train1', transform=None, target_transform=None, target_num = None):
     super(ColoredMNIST, self).__init__(root, transform=transform,
                                 target_transform=target_transform)
     self.prepare_colored_mnist()
@@ -55,7 +55,7 @@ class ColoredMNIST(datasets.VisionDataset):
     return len(self.data_label_tuples)
 
   def prepare_colored_mnist(self):
-    colored_mnist_dir = "/home/weijia/datasets/ColoredMNIST/"
+    colored_mnist_dir = "/home/user/datasets/ColoredMNIST/"
     if os.path.exists(os.path.join(colored_mnist_dir, 'train1.pt')) \
         and os.path.exists(os.path.join(colored_mnist_dir, 'train2.pt')) \
         and os.path.exists(os.path.join(colored_mnist_dir, 'test.pt')):
@@ -122,7 +122,7 @@ class ColoredFashionMNIST(datasets.VisionDataset):
     target_transform (callable, optional): A function/transform that takes in the
       target and transforms it.
   """
-  def __init__(self, root='/home/weijia/datasets/', env='train1', transform=None, target_transform=None, target_num=None):
+  def __init__(self, root='/home/user/datasets/', env='train1', transform=None, target_transform=None, target_num=None):
     super(ColoredFashionMNIST, self).__init__(root, transform=transform,
                                 target_transform=target_transform)
 
@@ -157,7 +157,7 @@ class ColoredFashionMNIST(datasets.VisionDataset):
     return len(self.data_label_tuples)
 
   def prepare_colored_mnist(self):
-    colored_fashionmnist_dir = "/home/weijia/datasets/ColoredFashionMNIST/"
+    colored_fashionmnist_dir = "/home/user/datasets/ColoredFashionMNIST/"
     if os.path.exists(os.path.join(colored_fashionmnist_dir, 'train1.pt')) \
         and os.path.exists(os.path.join(colored_fashionmnist_dir, 'train2.pt')) \
         and os.path.exists(os.path.join(colored_fashionmnist_dir, 'test.pt')):
