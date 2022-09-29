@@ -24,39 +24,6 @@ def reorder_y(bag_label, bag_idx, list_g):
         y_reordered[i] = bag_label[index.index(list_g[i])]
     return y_reordered
 
-def accumulate_group_evidence_sum(class_mu, class_std, bag_idx, is_cuda):
-    # convert class_std to variance
-    bag_mu = []
-    bag_var = []
-    list_bags_labels = []
-    sizes_bag = []
-    bags = (bag_idx).unique()
-    class_var = class_std.pow(2)
-    
-    for _, g in enumerate(bags):
-        bag_label = g.item()
-        samples_bag = bag_idx.eq(bag_label).nonzero().squeeze()
-
-        if samples_bag.numel()>0:
-            group_var =  class_var[samples_bag,:]
-            group_mu = class_mu[samples_bag,:] 
-            if samples_bag.numel()>1:
-                group_mu = group_mu.mean(0,keepdim=True)
-                # group_var = group_mu.pow(2).mean(0,keepdim=True) + class_std.pow(2).mean(0,keepdim=True) - group_mu.pow(2)
-                group_var = group_var.mean(0, keepdim=True)
-            else:
-                group_mu = group_mu[None,:]
-                group_var = group_var[None,:]
-
-            bag_mu.append(group_mu)
-            bag_var.append(group_var)
-            list_bags_labels.append(bag_label)
-            sizes_bag.append(samples_bag.numel())
-
-    bag_mu = torch.cat(bag_mu,dim=0)
-    bag_std = torch.cat(bag_var, dim=0).pow(0.5)
-    sizes_bag = torch.FloatTensor(sizes_bag)
-    return bag_mu, bag_std, list_bags_labels, sizes_bag
 
 def get_bag_labels(bag_idx):
     list_bags_labels = []
