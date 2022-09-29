@@ -1,4 +1,4 @@
-''' network with set transformer as bag prior'''
+''' network with set function as bag prior'''
 import sys 
 sys.path.append("..") 
 
