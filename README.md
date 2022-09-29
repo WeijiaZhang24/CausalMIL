@@ -1,7 +1,9 @@
-# Multi-Instance Causal Representation Learning for Instance Label Prediction and Out-of-Distribution Generalizatio
+# Multi-Instance Causal Representation Learning for Instance Label Prediction and Out-of-Distribution Generalization
 ## Weijia Zhang, Xuanhui Zhang, Han-Wen Deng, Min-Ling Zhang
 
 Paper to appear in NeurIPS 2022.
+
+Requirements: PyTorch 1.12
 
 ### To reproduce the results in the paper:
 
