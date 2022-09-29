@@ -251,15 +251,10 @@ def training_procedure(FLAGS, input_dim, dataset, target):
       # 
       if elbo_epoch < best_loss:
         best_loss = elbo_epoch
-        torch.save(model.state_dict(), '/home/weijia/Code/weights/colon_weights.pt')
+        torch.save(model.state_dict(), '/home/user/Code/weights/colon_weights.pt')
   
-    #   if ((epoch + 1) % 1 ==0):
-    #       print('Epoch #' + str(epoch+1) + '..............................................')
-    #       print("Train AUC  {:.3f}, Train AUC-PR {:3f}".format (epoch_train_auc, epoch_train_aucpr))
-    #       print("Val AUC  {:.3f}, Val AUC-PR {:3f}".format (epoch_val_auc, epoch_val_aucpr))
-    #       print("Test ACC: {:.4f}, Test AUC-PR: {:.4f}".format(test_accuracy, test_aucpr))
-  
-  model.load_state_dict(torch.load('/home/weijia/Code/weights/colon_weights.pt'))
+
+  model.load_state_dict(torch.load('/home/user/Code/weights/colon_weights.pt'))
   test_data = mi_imagedata(test_set, FLAGS.cuda, transformations = transform_test)
   testloader = DataLoader(test_data, batch_size = test_data.__len__(), shuffle=False, num_workers = 0,  collate_fn=mi_collate_img)    
   test_bag, test_bag_idx,test_bag_label, test_instance_label = next(iter(testloader))
@@ -302,7 +297,7 @@ for params in grid:
 
     batch_size = 32
 
-    data_path = '/home/weijia/datasets/ColonCancer/'
+    data_path = '/home/user/datasets/ColonCancer/'
     input_dim = (27,27,3)
 
     n_folds = 5
