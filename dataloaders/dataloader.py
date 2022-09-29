@@ -26,7 +26,7 @@ class KMnistBags3(data_utils.Dataset):
 
     def _create_bags(self):
         if self.train:
-            loader = data_utils.DataLoader(datasets.KMNIST('/home/weijia/datasets',
+            loader = data_utils.DataLoader(datasets.KMNIST('/home/user/datasets',
                                                           train=True,
                                                           download=True,
                                                           transform=transforms.Compose([
@@ -36,7 +36,7 @@ class KMnistBags3(data_utils.Dataset):
                                            batch_size=self.num_in_train,
                                            shuffle=False)
         else:
-            loader = data_utils.DataLoader(datasets.KMNIST('/home/weijia/datasets',
+            loader = data_utils.DataLoader(datasets.KMNIST('/home/user/datasets',
                                                           train=False,
                                                           download=True,
                                                           transform=transforms.Compose([
@@ -157,7 +157,7 @@ class FashionMnistBags3(data_utils.Dataset):
         # std = np.array([0.229, 0.224, 0.225])
     def _create_bags(self):
         if self.train:
-            loader = data_utils.DataLoader(datasets.FashionMNIST('/home/weijia/datasets',
+            loader = data_utils.DataLoader(datasets.FashionMNIST('/home/user/datasets',
                                                           train=True,
                                                           download=True,
                                                           transform=transforms.Compose([
@@ -166,7 +166,7 @@ class FashionMnistBags3(data_utils.Dataset):
                                            batch_size=self.num_in_train,
                                            shuffle=False)
         else:
-            loader = data_utils.DataLoader(datasets.FashionMNIST('/home/weijia/datasets',
+            loader = data_utils.DataLoader(datasets.FashionMNIST('/home/user/datasets',
                                                           train=False,
                                                           download=True,
                                                           transform=transforms.Compose([
@@ -284,7 +284,7 @@ class MnistBags3(data_utils.Dataset):
 
     def _create_bags(self):
         if self.train:
-            loader = data_utils.DataLoader(datasets.MNIST('/home/weijia/datasets',
+            loader = data_utils.DataLoader(datasets.MNIST('/home/user/datasets',
                                                           train=True,
                                                           download=True,
                                                           transform=transforms.Compose([
@@ -294,7 +294,7 @@ class MnistBags3(data_utils.Dataset):
                                            batch_size=self.num_in_train,
                                            shuffle=False)
         else:
-            loader = data_utils.DataLoader(datasets.MNIST('/home/weijia/datasets',
+            loader = data_utils.DataLoader(datasets.MNIST('/home/user/datasets',
                                                           train=False,
                                                           download=True,
                                                           transform=transforms.Compose([
