@@ -7,6 +7,7 @@ import torch.nn as nn
 import torch.distributions as dist
 from util import reorder_y
 import torch.distributions as dist
+import numpy as np
 
 def map_bag_embeddings(zx_q, zy_q, bag_idx, list_g):
     bag_latent_embeddings = torch.empty(zx_q.shape[0], zy_q.shape[1], requires_grad= True).to(torch.device('cuda'))
@@ -93,16 +94,19 @@ class encoder_xnou(nn.Module):
         return self.mean(inputs), self.logvar(inputs)
 
 
+
 class auxiliary_y_fixed(nn.Module):
     def __init__(self, instance_latent_dim, num_classes = 2):
         super(auxiliary_y_fixed, self).__init__()
         self.fc_ins = nn.Linear(instance_latent_dim, 1)
-    def forward(self, z_ins, bag_idx, bag_instances):
+    def forward(self, z_ins, bag_idx, bag_instances, instance_mu, instance_std):
         loc_ins= self.fc_ins(z_ins)
         bags = (bag_idx).unique()
         M = torch.zeros((bags.shape[0], 1)).to(torch.device('cuda')) # A Matrix that stores the prediction for the "max" instance of each bag
         max_z_ins = torch.zeros((bags.shape[0], z_ins.shape[1])).to(torch.device('cuda')) # the ins_code of "max" instance
         max_instances = torch.zeros((bags.shape[0], bag_instances.shape[1])).to(torch.device('cuda')) # the "max" instance of each bag, used for reconstruction
+        max_instances_mu = torch.zeros((bags.shape[0], instance_mu.shape[1])).to(torch.device('cuda')) # the "max" instance of each bag, used for reconstruction
+        max_instances_std = torch.zeros((bags.shape[0], instance_std.shape[1])).to(torch.device('cuda')) # the "max" instance of each bag, used for reconstruction
 
         for iter_id, bag in enumerate(bags):
             bag_id = bag.item()
@@ -113,13 +117,17 @@ class auxiliary_y_fixed(nn.Module):
                     M[iter_id, :] = M_bag
                     max_z_ins[iter_id, :] = z_ins[index]
                     max_instances[iter_id, :] = bag_instances[index]
+                    max_instances_mu[iter_id, :] = instance_mu[index]
+                    max_instances_std[iter_id, :] = instance_std[index]
+
                 else:
                     M[iter_id, :] = loc_ins[instances_bag]
                     max_z_ins[iter_id, :] = z_ins[instances_bag,:]
                     max_instances[iter_id, :] = bag_instances[instances_bag,:]
-        
+                    max_instances_mu[iter_id, :] = instance_mu[index]
+                    max_instances_std[iter_id, :] = instance_std[index]        
         # prediction for the max instances, original max instances, latent for max_instances, prediction for all instances
-        return M, max_instances, max_z_ins, loc_ins
+        return M, max_instances, max_z_ins, loc_ins, max_instances_mu, max_instances_std
 
 
 class cmil_mnist(nn.Module):
@@ -136,16 +144,15 @@ class cmil_mnist(nn.Module):
         self.decoder_x= decoder_x(latent_dim=self.instance_latent_dim)
         self.encoder_x = encoder_x(latent_dim=self.instance_latent_dim)
         self.encoder_xnou = encoder_xnou(latent_dim=self.instance_latent_dim, hidden_dims=None)
-
         self.auxiliary_y_fixed = auxiliary_y_fixed(self.instance_latent_dim, self.num_classes)
         
         self.deep_set_mean = nn.Linear(512,1)
         self.deep_set_logvar = nn.Linear(512, 1)
-
+        self.c = 2 * np.pi * torch.ones(1).to(torch.device('cuda'))
     def forward(self, bag, bag_idx, bag_label):
         # Encode bag prior with deep set 
         intermediate_output = self.encoder_x(bag)
-        instance_mu, instance_logvar = self.encoder_xnou(intermediate_output)
+        instance_mu, instance_logvar = self.encoder_xnou(intermediate_output) # encoder params
         instance_std = instance_logvar.mul(0.5).exp_()
         qzx = dist.Normal(instance_mu, instance_std)
         zx_q = qzx.rsample()  # [# of instances, instance_latent_dim] 
@@ -155,10 +162,10 @@ class cmil_mnist(nn.Module):
         prior_logvar = self.deep_set_logvar(bag_encoded)
         prior_std = prior_logvar.mul(0.5).exp_()
         KL_loss =  0.5 * (prior_mu.pow(2) + prior_std.pow(2) - 2*torch.log(prior_std) - 1).sum(dim=-1).mean()
-        KL_loss = KL_loss +  0.5 * (instance_mu.pow(2) + instance_std.pow(2) - 2*torch.log(instance_std) - 1).mean()
-        
+        # KL_loss = KL_loss +  0.5 * (instance_mu.pow(2) + instance_std.pow(2) - 2*torch.log(instance_std) - 1).mean()
+
         x_target = bag.flatten(start_dim = 1).contiguous()
-        y_hat, x_max, ins_hat, ins_hat_all = self.auxiliary_y_fixed(zx_q, bag_idx, x_target)
+        y_hat, x_max, ins_hat, _, instance_mu_hat, instance_std_hat = self.auxiliary_y_fixed(zx_q, bag_idx, x_target, instance_mu, instance_std)
         loss = nn.BCEWithLogitsLoss(reduction = 'mean')
         reordered_y = reorder_y(bag_label, bag_idx, list_bags_labels)
         auxiliary_loss_y= loss(y_hat.squeeze(), reordered_y)
@@ -167,7 +174,12 @@ class cmil_mnist(nn.Module):
         x_recon = self.decoder_x(ins_hat).flatten(start_dim = 1)
         loss = nn.MSELoss(reduction = 'mean') 
         reconstruction_loss = loss(x_recon,x_max)        
-        
+
+        # lpdf = -0.5 * (torch.log(self.c) + v.log() + (x - mu).pow(2).div(v))
+        lpdf_qz_xu = -0.5 * ( 2*instance_std_hat.log() + (ins_hat - instance_mu_hat).pow(2).div(instance_std_hat.pow(2)))
+        lpdf_pzu = -0.5 * (  2*prior_std.log() + ( ins_hat- prior_mu).pow(2).div(prior_std.pow(2)))
+        KL_loss = KL_loss + (lpdf_qz_xu.sum(dim=-1) - lpdf_pzu.sum(dim=-1)).mean()
+
         return reconstruction_loss, KL_loss, auxiliary_loss_y
 
     def loss_function(self, bag, bag_idx, bag_label, epoch):
@@ -195,7 +207,7 @@ class cmil_mnist(nn.Module):
             x_mu, _ = self.encoder_xnou(intermediate_x)
 
             x_target = bag.flatten(start_dim = 1)
-            _, _, _, pred_ins = self.auxiliary_y_fixed(x_mu, bag_idx, x_target)
+            _, _, _, pred_ins, _,  _ = self.auxiliary_y_fixed(x_mu, bag_idx, x_target, x_mu, x_mu)
         return torch.sigmoid(pred_ins)
 
 
