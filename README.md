@@ -3,6 +3,8 @@
 
 Paper to appear in NeurIPS 2022.
 
+For questions regarding the code, please contact weijia.zhang.xh@gmail.com
+
 Requirements: PyTorch 1.12
 
 ### To reproduce the results in the paper:
