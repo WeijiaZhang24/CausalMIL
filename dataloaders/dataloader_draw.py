@@ -22,7 +22,7 @@ class ColoredMnistBagsDraw(data_utils.Dataset):
 
     def _create_bags(self):
         if self.train == True:
-            loader = data_utils.DataLoader(ColoredMNIST('/home/weijia/datasets',
+            loader = data_utils.DataLoader(ColoredMNIST('/home/user/datasets',
                                         env='all_train',
                                         transform=transforms.Compose([
                                             transforms.ToTensor(),
@@ -30,7 +30,7 @@ class ColoredMnistBagsDraw(data_utils.Dataset):
                                             batch_size=self.num_in_test,
                                             shuffle=True)        
         else:
-            loader = data_utils.DataLoader(ColoredMNIST('/home/weijia/datasets',
+            loader = data_utils.DataLoader(ColoredMNIST('/home/user/datasets',
                                         env='test',
                                         transform=transforms.Compose([
                                             transforms.ToTensor(),
@@ -93,7 +93,7 @@ class ColoredFashionMnistBagsDraw_binary(data_utils.Dataset):
 
     def _create_bags(self):
         if self.train == True:
-            loader = data_utils.DataLoader(ColoredFashionMNIST('/home/weijia/datasets',
+            loader = data_utils.DataLoader(ColoredFashionMNIST('/home/user/datasets',
                                         env='all_train',
                                         transform=transforms.Compose([
                                             transforms.ToTensor(),
@@ -101,7 +101,7 @@ class ColoredFashionMnistBagsDraw_binary(data_utils.Dataset):
                                             batch_size=self.num_in_test,
                                             shuffle=True)        
         else:
-            loader = data_utils.DataLoader(ColoredFashionMNIST('/home/weijia/datasets',
+            loader = data_utils.DataLoader(ColoredFashionMNIST('/home/user/datasets',
                                         env='test',
                                         transform=transforms.Compose([
                                             transforms.ToTensor(),
@@ -165,7 +165,7 @@ class FashionMnistBagsDraw(data_utils.Dataset):
         self.test_bags_list, self.test_labels_list = self._create_bags()
 
     def _create_bags(self):
-        loader = data_utils.DataLoader(datasets.FashionMNIST('/home/weijia/datasets',
+        loader = data_utils.DataLoader(datasets.FashionMNIST('/home/user/datasets',
                                       train=False,
                                       download=True,
                                       transform=transforms.Compose([
@@ -230,7 +230,7 @@ class KMnistBagsDraw(data_utils.Dataset):
         self.test_bags_list, self.test_labels_list = self._create_bags()
 
     def _create_bags(self):
-        loader = data_utils.DataLoader(datasets.KMNIST('/home/weijia/datasets',
+        loader = data_utils.DataLoader(datasets.KMNIST('/home/user/datasets',
                                       train=False,
                                       download=True,
                                       transform=transforms.Compose([
@@ -295,7 +295,7 @@ class MnistBagsDraw(data_utils.Dataset):
         self.test_bags_list, self.test_labels_list = self._create_bags()
 
     def _create_bags(self):
-        loader = data_utils.DataLoader(datasets.MNIST('/home/weijia/datasets',
+        loader = data_utils.DataLoader(datasets.MNIST('/home/user/datasets',
                                       train=False,
                                       download=True,
                                       transform=transforms.Compose([
