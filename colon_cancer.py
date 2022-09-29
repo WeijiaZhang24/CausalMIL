@@ -281,7 +281,7 @@ import glob
 from sklearn.model_selection import KFold
 import imageio
 
-param_grid = {'instance_dim': [128],  'aux_loss_multiplier_y': [10.], 'kl_divergence_coef':[1]}
+param_grid = {'instance_dim': [24],  'aux_loss_multiplier_y': [1000.], 'kl_divergence_coef':[1]}
 grid = ParameterGrid(param_grid)    
 for params in grid:
     print(params)
@@ -306,7 +306,7 @@ for params in grid:
     input_dim = (27,27,3)
 
     n_folds = 5
-    dataset = load_dataset(dataset_path=data_path, n_folds=n_folds,seed = 12345678)
+    dataset = load_dataset(dataset_path=data_path, n_folds=n_folds,seed = 0)
 
     test_aucpr = []
 
