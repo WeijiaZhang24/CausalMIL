@@ -3,7 +3,7 @@ import torch.utils.data as data_utils
 import numpy as np
 from torchvision import datasets, transforms
 import torch
-from dataloaders.colorMNIST import ColoredMNIST, ColoredFashionMNIST, ColourBiasedMNIST
+from dataloaders.colorMNIST import ColoredMNIST, ColoredFashionMNIST
 
 
 class KMnistBags3(data_utils.Dataset):
