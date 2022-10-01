@@ -84,9 +84,6 @@ class KMnistBags3(data_utils.Dataset):
             t = random.sample(positive_idx, positive_num)
             for i in t:
                 indices.append(t[0])
-            lab = []
-            for i in indices:
-                lab.append(all_labels[i])
 
             indices = torch.LongTensor(indices)
 
@@ -213,9 +210,6 @@ class FashionMnistBags3(data_utils.Dataset):
             t = random.sample(positive_idx, positive_num)
             for i in t:
                 indices.append(t[0])
-            lab = []
-            for i in indices:
-                lab.append(all_labels[i])
 
             indices = torch.LongTensor(indices)
 
@@ -342,9 +336,6 @@ class MnistBags3(data_utils.Dataset):
             t = random.sample(positive_idx, positive_num)
             for i in t:
                 indices.append(t[0])
-            lab = []
-            for i in indices:
-                lab.append(all_labels[i])
 
             indices = torch.LongTensor(indices)
 
@@ -473,9 +464,6 @@ class ColoredMnistBags3_binary(data_utils.Dataset):
             t = random.sample(positive_idx, positive_num)
             for i in t:
                 indices.append(t[0])
-            lab = []
-            for i in indices:
-                lab.append(all_labels[i])
 
             indices = torch.LongTensor(indices)
 
@@ -599,9 +587,6 @@ class ColoredFashionMnistBags3_binary(data_utils.Dataset):
             t = random.sample(positive_idx, positive_num)
             for i in t:
                 indices.append(t[0])
-            lab = []
-            for i in indices:
-                lab.append(all_labels[i])
 
             indices = torch.LongTensor(indices)
 
