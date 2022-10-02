@@ -3,7 +3,8 @@ import torch.utils.data as data_utils
 import numpy as np
 from torchvision import datasets, transforms
 import torch
-from dataloaders.colorMNIST import ColoredMNIST, ColoredFashionMNIST
+from dataloaders.colorMNIST import ColoredMNIST, ColoredFashionMNIST, ColoredMNIST2
+# from colorMNIST import ColoredMNIST, ColoredFashionMNIST, ColourBiasedMNIST
 
 
 class KMnistBags3(data_utils.Dataset):
@@ -26,7 +27,7 @@ class KMnistBags3(data_utils.Dataset):
 
     def _create_bags(self):
         if self.train:
-            loader = data_utils.DataLoader(datasets.KMNIST('/home/user/datasets',
+            loader = data_utils.DataLoader(datasets.KMNIST('/home/weijia/datasets',
                                                           train=True,
                                                           download=True,
                                                           transform=transforms.Compose([
@@ -36,7 +37,7 @@ class KMnistBags3(data_utils.Dataset):
                                            batch_size=self.num_in_train,
                                            shuffle=False)
         else:
-            loader = data_utils.DataLoader(datasets.KMNIST('/home/user/datasets',
+            loader = data_utils.DataLoader(datasets.KMNIST('/home/weijia/datasets',
                                                           train=False,
                                                           download=True,
                                                           transform=transforms.Compose([
@@ -73,7 +74,7 @@ class KMnistBags3(data_utils.Dataset):
             bag_length = int(self.r.normal(self.mean_bag_length, self.var_bag_length, 1))
             positive_num = abs(bag_length - self.mean_bag_length)
             if positive_num == 0:
-                positive_num = self.mean_bag_length//5
+                positive_num = self.mean_bag_length//10
 #                 positive_num = 1
 #                 postive_num = random.randrange(1,self.mean_bag_length/10)
 #             print(positive_num)
@@ -81,9 +82,14 @@ class KMnistBags3(data_utils.Dataset):
                 bag_length = 1
 
             indices = random.sample(negative_idx, bag_length - positive_num)
-            t = random.sample(positive_idx, positive_num)
+            try:
+                t = random.sample(positive_idx, positive_num)
+            except ValueError:
+                print('No more positive instances 1')
+                break
+            positive_idx = list(set(positive_idx) - set(t))
             for i in t:
-                indices.append(t[0])
+                indices.append(i)
 
             indices = torch.LongTensor(indices)
 
@@ -96,20 +102,20 @@ class KMnistBags3(data_utils.Dataset):
         # negative
         for i in range(self.num_bag // 2):
             bag_length = int(self.r.normal(self.mean_bag_length, self.var_bag_length, 1))
-
             if bag_length < 1:
                 bag_length = 1
-
-            indices = random.sample(negative_idx, bag_length)
-
+            try:
+                indices = random.sample(negative_idx, bag_length)
+            except ValueError:
+                print('No more negative instances 1')
+                break
+            negative_idx = list(set(negative_idx) - set(t))
+            
             indices = torch.LongTensor(indices)
-
             labels_in_bag = all_labels[indices]
             labels_in_bag = labels_in_bag == self.target_number
-
             bags_list.append(all_imgs[indices])
             labels_list.append(labels_in_bag)
-
 
         return bags_list, labels_list
 
@@ -154,7 +160,7 @@ class FashionMnistBags3(data_utils.Dataset):
         # std = np.array([0.229, 0.224, 0.225])
     def _create_bags(self):
         if self.train:
-            loader = data_utils.DataLoader(datasets.FashionMNIST('/home/user/datasets',
+            loader = data_utils.DataLoader(datasets.FashionMNIST('/home/weijia/datasets',
                                                           train=True,
                                                           download=True,
                                                           transform=transforms.Compose([
@@ -163,7 +169,7 @@ class FashionMnistBags3(data_utils.Dataset):
                                            batch_size=self.num_in_train,
                                            shuffle=False)
         else:
-            loader = data_utils.DataLoader(datasets.FashionMNIST('/home/user/datasets',
+            loader = data_utils.DataLoader(datasets.FashionMNIST('/home/weijia/datasets',
                                                           train=False,
                                                           download=True,
                                                           transform=transforms.Compose([
@@ -207,9 +213,18 @@ class FashionMnistBags3(data_utils.Dataset):
                 bag_length = 1
 
             indices = random.sample(negative_idx, bag_length - positive_num)
-            t = random.sample(positive_idx, positive_num)
+            try:
+                t = random.sample(positive_idx, positive_num)
+            except ValueError:
+                print('No more positive instances 1')
+                break
+            try:
+                positive_idx = list(set(positive_idx) - set(t))
+            except ValueError:
+                print('No more positive instances 2')
+                break
             for i in t:
-                indices.append(t[0])
+                indices.append(i)
 
             indices = torch.LongTensor(indices)
 
@@ -226,7 +241,12 @@ class FashionMnistBags3(data_utils.Dataset):
             if bag_length < 1:
                 bag_length = 1
 
-            indices = random.sample(negative_idx, bag_length)
+            try:
+                indices = random.sample(negative_idx, bag_length)
+            except ValueError:
+                print('No more negative instances 1')
+                break
+            negative_idx = list(set(negative_idx) - set(t))
 
             indices = torch.LongTensor(indices)
 
@@ -278,7 +298,7 @@ class MnistBags3(data_utils.Dataset):
 
     def _create_bags(self):
         if self.train:
-            loader = data_utils.DataLoader(datasets.MNIST('/home/user/datasets',
+            loader = data_utils.DataLoader(datasets.MNIST('/home/weijia/datasets',
                                                           train=True,
                                                           download=True,
                                                           transform=transforms.Compose([
@@ -288,7 +308,7 @@ class MnistBags3(data_utils.Dataset):
                                            batch_size=self.num_in_train,
                                            shuffle=False)
         else:
-            loader = data_utils.DataLoader(datasets.MNIST('/home/user/datasets',
+            loader = data_utils.DataLoader(datasets.MNIST('/home/weijia/datasets',
                                                           train=False,
                                                           download=True,
                                                           transform=transforms.Compose([
@@ -333,9 +353,22 @@ class MnistBags3(data_utils.Dataset):
                 bag_length = 1
 
             indices = random.sample(negative_idx, bag_length - positive_num)
-            t = random.sample(positive_idx, positive_num)
+            
+            try:
+                t = random.sample(positive_idx, positive_num)
+            except ValueError:
+                print('No more positive instances 1')
+                break
+            try:
+                positive_idx = list(set(positive_idx) - set(t))
+            except ValueError:
+                print('No more positive instances 2')
+                break
+
             for i in t:
-                indices.append(t[0])
+                # indices.append(t[0])
+                indices.append(i)
+
 
             indices = torch.LongTensor(indices)
 
@@ -352,7 +385,12 @@ class MnistBags3(data_utils.Dataset):
             if bag_length < 1:
                 bag_length = 1
 
-            indices = random.sample(negative_idx, bag_length)
+            try:
+                indices = random.sample(negative_idx, bag_length)
+            except ValueError:
+                print('No more negative instances 1')
+                break
+            negative_idx = list(set(negative_idx) - set(t))
 
             indices = torch.LongTensor(indices)
 
@@ -461,9 +499,16 @@ class ColoredMnistBags3_binary(data_utils.Dataset):
                 bag_length = 1
 
             indices = random.sample(negative_idx, bag_length - positive_num)
-            t = random.sample(positive_idx, positive_num)
+            try:
+                t = random.sample(positive_idx, positive_num)
+            except ValueError:
+                print('No more positive instances 1')
+                break
+            positive_idx = list(set(positive_idx) - set(t))
+
             for i in t:
-                indices.append(t[0])
+                indices.append(i)
+
 
             indices = torch.LongTensor(indices)
 
@@ -554,7 +599,7 @@ class ColoredFashionMnistBags3_binary(data_utils.Dataset):
         positive_ins = all_labels < 5
         negative_ins = all_labels > 4
 
-        # Flip label with 25% probability, experimenting
+        # Flip label with 25% probability
         idx1 = np.random.choice(len(positive_ins), int(0.125*len(positive_ins)), replace=False)
         positive_ins[idx1] = ~positive_ins[idx1]
         idx2 = np.random.choice(len(negative_ins), int(0.125*len(negative_ins)), replace=False)
@@ -579,14 +624,23 @@ class ColoredFashionMnistBags3_binary(data_utils.Dataset):
             bag_length = int(self.r.normal(self.mean_bag_length, self.var_bag_length, 1))
             positive_num = abs(bag_length - self.mean_bag_length)
             if positive_num == 0:
+                # positive_num = self.mean_bag_length//1 # for Colored binarized tasks only 
                 positive_num = self.mean_bag_length//1 # for Colored binarized tasks only 
             if bag_length < 1:
                 bag_length = 1
 
             indices = random.sample(negative_idx, bag_length - positive_num)
-            t = random.sample(positive_idx, positive_num)
+            # t = random.sample(positive_idx, positive_num)
+            try:
+                t = random.sample(positive_idx, positive_num)
+            except ValueError:
+                print('No more positive instances 1')
+                break
+            positive_idx = list(set(positive_idx) - set(t))
+   
+            
             for i in t:
-                indices.append(t[0])
+                indices.append(i)
 
             indices = torch.LongTensor(indices)
 
@@ -602,17 +656,20 @@ class ColoredFashionMnistBags3_binary(data_utils.Dataset):
 
             if bag_length < 1:
                 bag_length = 1
-
-            indices = random.sample(negative_idx, bag_length)
+            try:
+                indices = random.sample(negative_idx, bag_length)
+            except ValueError:
+                print('No more negative instances 1')
+                break
+            negative_idx = list(set(negative_idx) - set(t))
 
             indices = torch.LongTensor(indices)
 
             labels_in_bag = all_labels[indices]
-            labels_in_bag = labels_in_bag < 5
+            labels_in_bag = labels_in_bag < 5 # labels in negative bags are all > 5, so this returns all False vector :)
 
             bags_list.append(all_imgs[indices])
             labels_list.append(labels_in_bag)
-
 
         return bags_list, labels_list
 
@@ -621,6 +678,7 @@ class ColoredFashionMnistBags3_binary(data_utils.Dataset):
             return len(self.train_labels_list)
         else:
             return len(self.test_labels_list)
+
 
     def __getitem__(self, index):
         if self.train:
@@ -636,10 +694,9 @@ class ColoredFashionMnistBags3_binary(data_utils.Dataset):
 
 
 if __name__ == '__main__':
-    dataset = KMnistBags3(target_number=0,
-                                        mean_bag_length=50,
-                                        var_bag_length=0,
-                                        num_bag=50000//50,
-                                        seed=1,
-                                        train=False)
+    dataset = ColoredFashionMnistBags3_binary(
+                                          mean_bag_length=10,
+                                          var_bag_length=0,
+                                          num_bag=40000//10,
+                                          train=True)
 
