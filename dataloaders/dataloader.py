@@ -27,7 +27,7 @@ class KMnistBags3(data_utils.Dataset):
 
     def _create_bags(self):
         if self.train:
-            loader = data_utils.DataLoader(datasets.KMNIST('/home/weijia/datasets',
+            loader = data_utils.DataLoader(datasets.KMNIST('/home/user/datasets',
                                                           train=True,
                                                           download=True,
                                                           transform=transforms.Compose([
@@ -37,7 +37,7 @@ class KMnistBags3(data_utils.Dataset):
                                            batch_size=self.num_in_train,
                                            shuffle=False)
         else:
-            loader = data_utils.DataLoader(datasets.KMNIST('/home/weijia/datasets',
+            loader = data_utils.DataLoader(datasets.KMNIST('/home/user/datasets',
                                                           train=False,
                                                           download=True,
                                                           transform=transforms.Compose([
@@ -74,10 +74,8 @@ class KMnistBags3(data_utils.Dataset):
             bag_length = int(self.r.normal(self.mean_bag_length, self.var_bag_length, 1))
             positive_num = abs(bag_length - self.mean_bag_length)
             if positive_num == 0:
-                positive_num = self.mean_bag_length//10
-#                 positive_num = 1
-#                 postive_num = random.randrange(1,self.mean_bag_length/10)
-#             print(positive_num)
+                positive_num = self.mean_bag_length//5
+
             if bag_length < 1:
                 bag_length = 1
 
@@ -160,7 +158,7 @@ class FashionMnistBags3(data_utils.Dataset):
         # std = np.array([0.229, 0.224, 0.225])
     def _create_bags(self):
         if self.train:
-            loader = data_utils.DataLoader(datasets.FashionMNIST('/home/weijia/datasets',
+            loader = data_utils.DataLoader(datasets.FashionMNIST('/home/user/datasets',
                                                           train=True,
                                                           download=True,
                                                           transform=transforms.Compose([
@@ -169,7 +167,7 @@ class FashionMnistBags3(data_utils.Dataset):
                                            batch_size=self.num_in_train,
                                            shuffle=False)
         else:
-            loader = data_utils.DataLoader(datasets.FashionMNIST('/home/weijia/datasets',
+            loader = data_utils.DataLoader(datasets.FashionMNIST('/home/user/datasets',
                                                           train=False,
                                                           download=True,
                                                           transform=transforms.Compose([
@@ -205,10 +203,8 @@ class FashionMnistBags3(data_utils.Dataset):
             bag_length = int(self.r.normal(self.mean_bag_length, self.var_bag_length, 1))
             positive_num = abs(bag_length - self.mean_bag_length)
             if positive_num == 0:
-                positive_num = self.mean_bag_length//10
-#                 positive_num = 1
-#                 postive_num = random.randrange(1,self.mean_bag_length/10)
-#             print(positive_num)
+                positive_num = self.mean_bag_length//5
+
             if bag_length < 1:
                 bag_length = 1
 
@@ -298,7 +294,7 @@ class MnistBags3(data_utils.Dataset):
 
     def _create_bags(self):
         if self.train:
-            loader = data_utils.DataLoader(datasets.MNIST('/home/weijia/datasets',
+            loader = data_utils.DataLoader(datasets.MNIST('/home/user/datasets',
                                                           train=True,
                                                           download=True,
                                                           transform=transforms.Compose([
@@ -308,7 +304,7 @@ class MnistBags3(data_utils.Dataset):
                                            batch_size=self.num_in_train,
                                            shuffle=False)
         else:
-            loader = data_utils.DataLoader(datasets.MNIST('/home/weijia/datasets',
+            loader = data_utils.DataLoader(datasets.MNIST('/home/user/datasets',
                                                           train=False,
                                                           download=True,
                                                           transform=transforms.Compose([
@@ -345,10 +341,8 @@ class MnistBags3(data_utils.Dataset):
             bag_length = int(self.r.normal(self.mean_bag_length, self.var_bag_length, 1))
             positive_num = abs(bag_length - self.mean_bag_length)
             if positive_num == 0:
-                positive_num = self.mean_bag_length//10
-#                 positive_num = 1
-#                 postive_num = random.randrange(1,self.mean_bag_length/10)
-#             print(positive_num)
+                positive_num = self.mean_bag_length//5
+
             if bag_length < 1:
                 bag_length = 1
 
@@ -366,7 +360,6 @@ class MnistBags3(data_utils.Dataset):
                 break
 
             for i in t:
-                # indices.append(t[0])
                 indices.append(i)
 
 
@@ -463,8 +456,6 @@ class ColoredMnistBags3_binary(data_utils.Dataset):
         for (batch_data, batch_labels) in loader:
             all_imgs = batch_data
             all_labels = batch_labels
-
-
 
         positive_ins = all_labels < 5
         negative_ins = all_labels > 4
