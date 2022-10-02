@@ -14,4 +14,4 @@ Requirements: PyTorch 1.12
 #### For Out-of-Distribution (OOD) generalization results, please use ColorMNIST_OOD.ipynb.
 
 #### For Colon Cancer results, please use colon_cancer.py. 
-This dataset can be obtained (courtesy of Jiawen Yao) from https://drive.google.com/file/d/1RcNlwg0TwaZoaFO0uMXHFtAo_DCVPE6z/view?usp=sharing
+This dataset can be obtained (credit to Dr. Jiawen Yao) from https://drive.google.com/file/d/1RcNlwg0TwaZoaFO0uMXHFtAo_DCVPE6z/view?usp=sharing
