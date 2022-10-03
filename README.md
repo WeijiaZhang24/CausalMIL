@@ -17,4 +17,5 @@ Requirements: PyTorch 1.12
 
 #### For Colon Cancer results, please use colon_cancer.py. 
 This piece of code provides a dataloader for processing MIL bags organized as folders of images.
-This dataset can be obtained (credit to Dr. Jiawen Yao) from https://drive.google.com/file/d/1RcNlwg0TwaZoaFO0uMXHFtAo_DCVPE6z/view?usp=sharing
+
+The dataset can be obtained (credit to Dr. Jiawen Yao) from https://drive.google.com/file/d/1RcNlwg0TwaZoaFO0uMXHFtAo_DCVPE6z/view?usp=sharing
