@@ -9,7 +9,7 @@ Requirements: PyTorch 1.12
 
 ### To reproduce the results in the paper:
 
-#### For MNIST, FashionMNIST, KuzushijiMNIST multi-instance bags, please use MNIST_bags.ipynb for training, testing and visulization.
+#### For MNIST, FashionMNIST, KuzushijiMNIST multi-instance datasets results, please use MNIST_bags.ipynb for training, testing and visulization.
 
 
 #### For Out-of-Distribution (OOD) generalization results, please use ColorMNIST_OOD.ipynb for training, testing and visulization.
