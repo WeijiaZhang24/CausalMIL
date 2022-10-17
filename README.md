@@ -1,7 +1,10 @@
-## Multi-Instance Causal Representation Learning for Instance Label Prediction and Out-of-Distribution Generalization
-### Weijia Zhang, Xuanhui Zhang, Han-Wen Deng, Min-Ling Zhang
+## CausalMIL
 
-### NeurIPS 2022.
+This work has been published as:
+
+## Multi-Instance Causal Representation Learning for Instance Label Prediction and Out-of-Distribution Generalization
+#### Weijia Zhang, Xuanhui Zhang, Han-Wen Deng, Min-Ling Zhang
+#### Advances in Neural Information Processing Systems 35. (NeurIPS-2022).
 
 For questions regarding the code, please contact weijia.zhang.xh@gmail.com
 
