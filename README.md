@@ -1,8 +1,8 @@
-## CausalMIL
+## Multi-Instance Causal Representation Learning for Instance Label Prediction and Out-of-Distribution Generalization
 
 If you use any code from this repository, please kindly cite the following paper:
 
-## Multi-Instance Causal Representation Learning for Instance Label Prediction and Out-of-Distribution Generalization
+#### Multi-Instance Causal Representation Learning for Instance Label Prediction and Out-of-Distribution Generalization
 #### Weijia Zhang, Xuanhui Zhang, Han-Wen Deng, Min-Ling Zhang
 #### Advances in Neural Information Processing Systems 35.
 
