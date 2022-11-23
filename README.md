@@ -1,4 +1,4 @@
-## Multi-Instance Causal Representation Learning for Instance Label Prediction and Out-of-Distribution Generalization
+## Multi-Instance Causal Representation Learning for Instance Label Prediction and Out-of-Distribution Generalization (NeurIPS-2022)
 
 If you use any code from this repository, please kindly cite the following paper:
 
