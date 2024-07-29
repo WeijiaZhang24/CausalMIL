@@ -6,6 +6,8 @@ If you use any code from this repository, please kindly cite the following paper
 #### Weijia Zhang, Xuanhui Zhang, Han-Wen Deng, Min-Ling Zhang
 #### Advances in Neural Information Processing Systems 35 (NeurIPS-2022).
 
+Paper can be downloaded from [here](https://papers.neurips.cc/paper_files/paper/2022/file/e261e92e1cfb820da930ad8c38d0aead-Paper-Conference.pdf)
+
 For questions regarding the code, please contact weijia.zhang.xh@gmail.com
 
 Requirements: PyTorch 1.12
