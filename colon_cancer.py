@@ -195,7 +195,7 @@ def training_procedure(FLAGS, input_dim, dataset, target):
   train_bags = dataset['train']
   test_bags = dataset['test']
 
-  train_bags = train_bags + test_bags
+  # train_bags = train_bags + test_bags
   # convert bag to batch
   train_set = generate_batch(train_bags, target)
   test_set = generate_batch(test_bags, target)
@@ -283,7 +283,7 @@ for params in grid:
     parser = argparse.ArgumentParser()
     parser.add_argument('--cuda', type=bool, default=True, help="run the following code on a GPU")
     parser.add_argument('--num_classes', type=int, default=2, help="number of classes on which the data set trained")
-    parser.add_argument('--initial_learning_rate', type=float, default=1e-3, help="starting learning rate")
+    parser.add_argument('--initial_learning_rate', type=float, default=1e-4, help="starting learning rate")
     parser.add_argument("--weight-decay", default=1e-4, type=float)
     parser.add_argument('--instance_dim', type=int, default=params['instance_dim'], help="dimension of instance factor latent space")
     parser.add_argument('--reconstruction_coef', type=float, default=1., help="coefficient for reconstruction term")
