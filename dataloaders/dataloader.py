@@ -3,7 +3,7 @@ import torch.utils.data as data_utils
 import numpy as np
 from torchvision import datasets, transforms
 import torch
-from dataloaders.colorMNIST import ColoredMNIST, ColoredFashionMNIST, ColoredMNIST2
+from dataloaders.colorMNIST import ColoredMNIST, ColoredFashionMNIST, ColoredMNIST
 # from colorMNIST import ColoredMNIST, ColoredFashionMNIST, ColourBiasedMNIST
 
 
